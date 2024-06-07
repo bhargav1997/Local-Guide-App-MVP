@@ -1,6 +1,7 @@
 ﻿using Local_Guide_App.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -23,9 +24,11 @@ namespace Local_Guide_App.Controllers
         /// GET: api/ReviewData/ListReviewsForLocation/1
         /// </example>
         [HttpGet]
+        [Route("api/ReviewData/ListReviewsForLocation/{locationId}")]
         [ResponseType(typeof(IEnumerable<ReviewDto>))]
         public IHttpActionResult ListReviewsForLocation(int locationId)
         {
+            Debug.WriteLine("Loca---" + locationId);
             List<Review> reviews = db.Reviews.Where(r => r.LocationId == locationId).ToList();
             List<ReviewDto> reviewDtos = new List<ReviewDto>();
 
@@ -53,6 +56,7 @@ namespace Local_Guide_App.Controllers
         /// GET: api/ReviewData/FindReview/1
         /// </example>
         [HttpGet]
+        [Route("api/ReviewData/FindReview/{id}")]
         [ResponseType(typeof(ReviewDto))]
         public IHttpActionResult FindReview(int id)
         {
@@ -87,8 +91,9 @@ namespace Local_Guide_App.Controllers
         /// POST: api/ReviewData/UpdateReview/1
         /// BODY: { "ReviewId": 1, "Content": "Great place!", "Rating": 5, "LocationId": 1, "CreatedDate": "2023-06-01T00:00:00" }
         /// </example>
-        [ResponseType(typeof(void))]
         [HttpPost]
+        [Route("api/ReviewData/UpdateReview/{id}/{review}")]
+        [ResponseType(typeof(void))]
         public IHttpActionResult UpdateReview(int id, Review review)
         {
             if (!ModelState.IsValid)
@@ -120,8 +125,9 @@ namespace Local_Guide_App.Controllers
         /// POST: api/ReviewData/AddReview
         /// BODY: { "Content": "Great place!", "Rating": 5, "LocationId": 1, "CreatedDate": "2023-06-01T00:00:00" }
         /// </example>
-        [ResponseType(typeof(Review))]
         [HttpPost]
+        [Route("api/ReviewData/AddReview")]
+        [ResponseType(typeof(Review))]
         public IHttpActionResult AddReview(Review review)
         {
             if (!ModelState.IsValid)
@@ -147,8 +153,9 @@ namespace Local_Guide_App.Controllers
         /// <example>
         /// POST: api/ReviewData/DeleteReview/1
         /// </example>
-        [ResponseType(typeof(Review))]
         [HttpPost]
+        [Route("api/ReviewData/DeleteReview/{id}")]
+        [ResponseType(typeof(Review))]
         public IHttpActionResult DeleteReview(int id)
         {
             Review review = db.Reviews.Find(id);

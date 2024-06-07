@@ -29,6 +29,7 @@ namespace Local_Guide_App.Controllers
         /// </example>
         [System.Web.Http.HttpGet]
         [System.Web.Http.Route("api/LocationData/LocationsList")]
+        [ResponseType(typeof(LocationDto))]
         public List<LocationDto> LocationsList()
         {
             List<Location> locations = db.Locations.ToList();
@@ -91,7 +92,7 @@ namespace Local_Guide_App.Controllers
         /// GET: api/LocationData/FindLocation/1
         /// </example>
         [System.Web.Http.HttpGet]
-        [System.Web.Http.Route("api/LocationData/FindLocation")]
+        [System.Web.Http.Route("api/LocationData/FindLocation/{id}")]
         [ResponseType(typeof(LocationDto))]
         public IHttpActionResult FindLocation(int id)
         {
@@ -128,7 +129,7 @@ namespace Local_Guide_App.Controllers
         /// BODY: { "LocationId": 1, "LocationName": "Park", "LocationDescription": "A nice park", "Category": "Recreation", "Address": "123 Park Lane", "CreatedDate": "2023-06-01T00:00:00" }
         /// </example>
         [System.Web.Http.HttpPost]
-        [System.Web.Http.Route("api/LocationData/UpdateLocation")]
+        [System.Web.Http.Route("api/LocationData/UpdateLocation/{id}/{location}")]
         [ResponseType(typeof(void))]
         public IHttpActionResult UpdateLocation(int id, Location location)
         {
@@ -162,7 +163,7 @@ namespace Local_Guide_App.Controllers
         /// BODY: { "LocationName": "Park", "LocationDescription": "A nice park", "Category": "Recreation", "Address": "123 Park Lane", "CreatedDate": "2023-06-01T00:00:00" }
         /// </example>
         [System.Web.Http.HttpPost]
-        [System.Web.Http.Route("api/LocationData/AddLocation")]
+        [System.Web.Http.Route("api/LocationData/AddLocation/{location}")]
         [ResponseType(typeof(LocationDto))]
         public IHttpActionResult AddLocation(Location location)
         {
@@ -190,7 +191,7 @@ namespace Local_Guide_App.Controllers
         /// POST: api/LocationData/DeleteLocation/1
         /// </example>
         [System.Web.Http.HttpPost]
-        [System.Web.Http.Route("api/LocationData/DeleteLocation")]
+        [System.Web.Http.Route("api/LocationData/DeleteLocation/{id}")]
         [ResponseType(typeof(LocationDto))]
         public IHttpActionResult DeleteLocation(int id)
         {

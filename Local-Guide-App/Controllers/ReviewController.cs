@@ -21,7 +21,7 @@ namespace Local_Guide_App.Controllers
         {
          
             client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:44395/api/");
+            client.BaseAddress = new Uri("https://localhost:44395/api/ReviewData");
         }
 
         [HttpGet]
@@ -35,13 +35,15 @@ namespace Local_Guide_App.Controllers
         [HttpPost]
         public ActionResult Create(Review review)
         {
-            string url = "ReviewData/AddReview";
+            string url = "AddReview"; // Corrected URL to match the route in API controller
 
             string jsonpayload = jss.Serialize(review);
             HttpContent content = new StringContent(jsonpayload);
-            content.Headers.ContentType.MediaType = "application/json";
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
             HttpResponseMessage response = client.PostAsync(url, content).Result;
+            Debug.WriteLine(response.StatusCode);
+
             if (response.IsSuccessStatusCode)
             {
                 return RedirectToAction("Details", "Location", new { id = review.LocationId });
@@ -52,11 +54,12 @@ namespace Local_Guide_App.Controllers
             }
         }
 
+
         [HttpGet]
         public ActionResult List(int locationId)
         {
             Debug.WriteLine("LocationId"+ locationId);
-            string url = $"ReviewData/ListReviewsForLocation/{locationId}";
+            string url = $"/ListReviewsForLocation/{locationId}";
             Debug.WriteLine("Url:::" + url);
             var response = client.GetAsync(url).Result;
 
