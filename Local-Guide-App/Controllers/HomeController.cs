@@ -1,0 +1,46 @@
+﻿using Local_Guide_App.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace Local_Guide_App.Controllers
+{
+    public class HomeController : Controller
+    {
+        private ApplicationDbContext db = new ApplicationDbContext();
+
+        public ActionResult Index()
+        {
+            // Fetch all locations
+            var locations = db.Locations.ToList();
+
+            var locationDtos = locations.Select(location => new LocationDto
+            {
+                LocationId = location.LocationId,
+                LocationName = location.LocationName,
+                LocationDescription = location.LocationDescription,
+                Category = location.Category,
+                Address = location.Address,
+                CreatedDate = location.CreatedDate 
+            }).ToList();
+
+            return View(locationDtos);
+        }
+
+        public ActionResult About()
+        {
+            ViewBag.Message = "Your application description page.";
+
+            return View();
+        }
+
+        public ActionResult Contact()
+        {
+            ViewBag.Message = "Your contact page.";
+
+            return View();
+        }
+    }
+}

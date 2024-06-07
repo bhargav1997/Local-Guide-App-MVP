@@ -1,0 +1,39 @@
+﻿@model Local_Guide_App.Models.LocationDto
+
+@{
+    ViewBag.Title = "Location Details";
+}
+
+<div class="container mt-5">
+    <h2>@Model.LocationName</h2>
+    <p>@Model.LocationDescription</p>
+    <p>Category: @Model.Category</p>
+    <p>Address: @Model.Address</p>
+
+    <h3>Reviews</h3>
+    <div id="reviews-section">
+    </div>
+
+    <div id="add-review-section" style="display: none;">
+        <h3>Add Review</h3>
+        <form id="add-review-form">
+            <div class="form-group">
+                <label for="review-content">Review:</label>
+                <textarea class="form-control" id="review-content" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <input type="number" class="form-control" id="rating" min="1" max="5" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+
+    <button id="add-review-button" class="btn btn-secondary mt-3" onclick="toggleAddReviewSection()">Add Review</button>
+</div>
+
+<script>
+    function toggleAddReviewSection() {
+        $('#add-review-section').toggle();
+    }
+</script>

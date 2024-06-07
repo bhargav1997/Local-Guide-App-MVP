@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Local_Guide_App.Models.LocationDto>
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<main class="container mt-5">
+    <div class="row">
+        @foreach (var location in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@location.LocationName</h5>
+                        <p class="card-text">@location.LocationDescription</p>
+                        <p class="card-text">Category: @location.Category</p>
+                        <p class="card-text">Address: @location.Address</p>
+                        <div class="d-flex justify-content-between">
+                            <a href="@Url.RouteUrl("AddReview", new { locationId = location.LocationId })" class="btn btn-primary">Add Review</a>
+                            <a href="@Url.RouteUrl("ViewReviews", new { locationId = location.LocationId })" class="btn btn-secondary">View Reviews</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</main>

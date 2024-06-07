@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Local_Guide_App.Models.ReviewDto>
+
+@{
+    ViewBag.Title = "Reviews";
+}
+
+<div class="container mt-5">
+    <h2>Reviews</h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Content</th>
+                    <th>Rating</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Content</td>
+                        <td>@item.Rating</td>
+                        <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
