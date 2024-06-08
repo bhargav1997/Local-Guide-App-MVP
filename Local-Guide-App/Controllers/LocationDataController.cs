@@ -163,8 +163,8 @@ namespace Local_Guide_App.Controllers
         /// BODY: { "LocationName": "Park", "LocationDescription": "A nice park", "Category": "Recreation", "Address": "123 Park Lane", "CreatedDate": "2023-06-01T00:00:00" }
         /// </example>
         [System.Web.Http.HttpPost]
-        [System.Web.Http.Route("api/LocationData/AddLocation/{location}")]
-        [ResponseType(typeof(LocationDto))]
+        [System.Web.Http.Route("api/LocationData/AddLocation")]
+        [ResponseType(typeof(Location))]
         public IHttpActionResult AddLocation(Location location)
         {
             if (!ModelState.IsValid)

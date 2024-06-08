@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
@@ -35,25 +36,31 @@ namespace Local_Guide_App.Controllers
         [HttpPost]
         public ActionResult Create(Review review)
         {
-            string url = "AddReview";
-
-            string jsonpayload = jss.Serialize(review);
-            HttpContent content = new StringContent(jsonpayload);
-            
-            content.Headers.ContentType.MediaType = "application/json";
-
-            HttpResponseMessage response = client.PostAsync(url, content).Result;
-            Debug.WriteLine(response.StatusCode);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return RedirectToAction("Details", "Location", new { id = review.LocationId });
+                review.CreatedDate = DateTime.Now;
+
+                string jsonpayload = jss.Serialize(review);
+                HttpContent content = new StringContent(jsonpayload);
+                content.Headers.ContentType.MediaType = "application/json";
+                HttpResponseMessage response = client.PostAsync("AddReview", content).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("List", "Review", new { id = review.LocationId });
+                } else
+                {
+                    return RedirectToAction("Error");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return RedirectToAction("Error");
+                Debug.WriteLine(ex, "An error occurred during review creation.");
+
+                ModelState.AddModelError("==>", "An unexpected error occurred. Please try again later.");
+                return RedirectToAction("Index", "Home");
             }
         }
+
 
         [HttpGet]
         public ActionResult List(int locationId)
@@ -67,17 +74,14 @@ namespace Local_Guide_App.Controllers
 
             if (response.IsSuccessStatusCode)
             {
-                // Set media type explicitly to JSON
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-                // Deserialize the response content
                 IEnumerable<ReviewDto> reviews = response.Content.ReadAsAsync<IEnumerable<ReviewDto>>().Result;
                 ViewBag.LocationId = locationId;
                 return View(reviews);
             }
             else
             {
-                // Handle unsuccessful response
                 return RedirectToAction("Error");
             }
         }

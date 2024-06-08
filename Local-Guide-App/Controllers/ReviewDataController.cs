@@ -143,7 +143,6 @@ namespace Local_Guide_App.Controllers
             catch (DbUpdateException ex)
             {
                 Debug.WriteLine("DbUpdateException: " + ex.InnerException?.Message);
-                // Optionally, you could also return a more specific error message to the client
                 return InternalServerError(ex);
             }
 

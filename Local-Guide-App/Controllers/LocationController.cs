@@ -7,6 +7,7 @@ using Local_Guide_App.Models;
 using System.Web.Script.Serialization;
 using Microsoft.AspNet.Identity;
 using System.Web;
+using System.Diagnostics;
 
 namespace Local_Guide_App.Controllers
 {
@@ -19,7 +20,7 @@ namespace Local_Guide_App.Controllers
         static LocationController()
         {
             client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:44395/api/locationdata");
+            client.BaseAddress = new Uri("https://localhost:44395/api/locationdata/");
         }
 
         public ActionResult Add()
@@ -30,21 +31,26 @@ namespace Local_Guide_App.Controllers
         [HttpPost]
         public ActionResult Create(Location location)
         {
-            string url = "/AddLocation";
+            string url = "AddLocation";
+            location.Ratings = 0;
+            location.CreatedDate = DateTime.Now;
 
             string jsonpayload = jss.Serialize(location);
 
-            Console.WriteLine(jsonpayload);
+            Debug.WriteLine("==>"+jsonpayload);
 
             HttpContent content = new StringContent(jsonpayload);
             content.Headers.ContentType.MediaType = "application/json";
 
             HttpResponseMessage response = client.PostAsync(url, content).Result;
+
+            //Debug.WriteLine(response?.IsSuccessStatusCode);
+
             if (response.IsSuccessStatusCode)
             {
                 return RedirectToAction("List");
             }
-            else
+           else
             {
                 return RedirectToAction("Error");
             }
@@ -52,7 +58,7 @@ namespace Local_Guide_App.Controllers
 
         public ActionResult List()
         {
-            string url = "/ListLocations";
+            string url = "ListLocations";
             HttpResponseMessage response = client.GetAsync(url).Result;
 
             IEnumerable<LocationDto> locations = response.Content.ReadAsAsync<IEnumerable<LocationDto>>().Result;

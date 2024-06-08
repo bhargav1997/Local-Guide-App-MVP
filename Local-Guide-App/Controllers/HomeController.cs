@@ -23,7 +23,8 @@ namespace Local_Guide_App.Controllers
                 LocationDescription = location.LocationDescription,
                 Category = location.Category,
                 Address = location.Address,
-                CreatedDate = location.CreatedDate 
+                CreatedDate = location.CreatedDate ,
+                Ratings = location.Ratings,
             }).ToList();
 
             return View(locationDtos);
