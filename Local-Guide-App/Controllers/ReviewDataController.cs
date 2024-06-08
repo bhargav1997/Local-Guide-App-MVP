@@ -1,6 +1,7 @@
 ﻿using Local_Guide_App.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Linq;
 using System.Web.Http;
@@ -25,7 +26,6 @@ namespace Local_Guide_App.Controllers
         /// </example>
         [HttpGet]
         [Route("api/ReviewData/ListReviewsForLocation/{locationId}")]
-        [ResponseType(typeof(IEnumerable<ReviewDto>))]
         public IHttpActionResult ListReviewsForLocation(int locationId)
         {
             Debug.WriteLine("Loca---" + locationId);
@@ -135,8 +135,17 @@ namespace Local_Guide_App.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.Reviews.Add(review);
-            db.SaveChanges();
+            try
+            {
+                db.Reviews.Add(review);
+                db.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+                Debug.WriteLine("DbUpdateException: " + ex.InnerException?.Message);
+                // Optionally, you could also return a more specific error message to the client
+                return InternalServerError(ex);
+            }
 
             return CreatedAtRoute("DefaultApi", new { id = review.ReviewId }, review);
         }

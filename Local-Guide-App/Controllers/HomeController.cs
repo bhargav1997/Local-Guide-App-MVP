@@ -31,7 +31,7 @@ namespace Local_Guide_App.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "A CMS for local guides to share information about attractions, restaurants, events, and services in their area.";
 
             return View();
         }
