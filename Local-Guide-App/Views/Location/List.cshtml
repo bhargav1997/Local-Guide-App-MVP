@@ -17,14 +17,15 @@
                         <p class="card-text">Address: @location.Address</p>
                         <p class="card-text">Average Rating: @location.AverageRating.ToString("0.0")</p>
                         <div class="d-flex justify-content-between">
-                            <a href="@Url.Action("AddReview", "Location", new { locationId = location.LocationId })" class="btn btn-primary">Add Review</a>
-                            <a href="@Url.Action("LocationWithReviews", "Location", new { id = location.LocationId })" class="btn btn-secondary">View Reviews</a>
-                            <a href="@Url.Action("Edit", "Location", new { id = location.LocationId })" class="btn btn-warning">Edit</a>
-                            <a href="@Url.Action("Details", "Location", new { id = location.LocationId })" class="btn btn-info">Details</a>
+                                  <a href="@Url.RouteUrl("AddReview", new { locationId = location.LocationId })" class="btn btn-primary">Add Review</a>
+
+                                <a href="@Url.Action("LocationWithReviews", "Location", new { id = location.LocationId })" class="btn btn-secondary">View Reviews</a>
+                                <a href="@Url.Action("Edit", "Location", new { id = location.LocationId })" class="btn btn-warning">Edit</a>
+                                <a href="@Url.Action("Details", "Location", new { id = location.LocationId })" class="btn btn-info">Details</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
-</main>
+            }
+        </div>
+    </main>
