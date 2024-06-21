@@ -11,13 +11,13 @@
             <p class="card-text">@Model.LocationDescription</p>
             <p class="card-text">Category: @Model.Category</p>
             <p class="card-text">Address: @Model.Address</p>
-            <p class="card-text">Ratings: @Model.Ratings</p>
+            <p class="card-text">Ratings: @Model.AverageRating</p>
             <p class="card-text">Created Date: @Model.CreatedDate.ToString("yyyy-MM-dd")</p>
             <div>
                 <a href="@Url.Action("Edit", "Location", new { id = Model.LocationId })" class="btn btn-warning">Edit</a>
-                <a href="@Url.Action("AddReview", "Location", new { locationId = Model.LocationId })" class="btn btn-primary">Add Review</a>
+                <a href="@Url.RouteUrl("AddReview", new { locationId = Model.LocationId })" class="btn btn-primary">Add Review</a>
                 <a href="@Url.Action("LocationWithReviews", "Location", new { id = Model.LocationId })" class="btn btn-secondary">View Reviews</a>
-                <a href="@Url.Action("List", "Location")" class="btn btn-secondary">Back to List</a>
+                <a href="@Url.Action("List")" class="btn btn-secondary">Back to List</a>
             </div>
         </div>
     </div>

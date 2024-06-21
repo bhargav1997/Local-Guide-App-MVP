@@ -46,8 +46,9 @@ namespace Local_Guide_App.Controllers
                 HttpResponseMessage response = client.PostAsync("AddReview", content).Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("List", "Review", new { id = review.LocationId });
-                } else
+                    return RedirectToAction("Index", "Home");
+                }
+                else
                 {
                     return RedirectToAction("Error");
                 }
@@ -61,24 +62,78 @@ namespace Local_Guide_App.Controllers
             }
         }
 
-
         [HttpGet]
         public ActionResult List(int locationId)
         {
-            Debug.WriteLine("LocationId"+ locationId);
+            Debug.WriteLine("LocationId" + locationId);
             string url = $"ListReviewsForLocation/{locationId}";
             Debug.WriteLine("Url:::" + url);
-            var response = client.GetAsync(url).Result;
 
-            Debug.WriteLine(response);
+            var response = client.GetAsync(url).Result;
 
             if (response.IsSuccessStatusCode)
             {
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-                IEnumerable<ReviewDto> reviews = response.Content.ReadAsAsync<IEnumerable<ReviewDto>>().Result;
+                // Deserialize JSON array into IEnumerable<ReviewDto>
+                var json = response.Content.ReadAsStringAsync().Result;
+                IEnumerable<ReviewDto> reviews = jss.Deserialize<IEnumerable<ReviewDto>>(json);
+
                 ViewBag.LocationId = locationId;
                 return View(reviews);
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
+        }
+
+        [HttpGet]
+        public ActionResult Edit(int id)
+        {
+            string url = $"FindReview/{id}";
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                ReviewDto review = response.Content.ReadAsAsync<ReviewDto>().Result;
+                return View(review);
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Update(ReviewDto review)
+        {
+            string url = $"UpdateReview/{review.ReviewId}";
+            string jsonpayload = jss.Serialize(review);
+            HttpContent content = new StringContent(jsonpayload);
+            content.Headers.ContentType.MediaType = "application/json";
+
+            HttpResponseMessage response = client.PostAsync(url, content).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("LocationWithReviews", "Location", new { id = review.LocationId });
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id, int locationId)
+        {
+            string url = $"DeleteReview/{id}";
+            HttpResponseMessage response = client.PostAsync(url, null).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("LocationWithReviews", "Location", new { id = locationId });
             }
             else
             {

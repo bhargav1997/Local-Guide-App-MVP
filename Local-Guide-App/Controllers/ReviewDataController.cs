@@ -14,36 +14,6 @@ namespace Local_Guide_App.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         /// <summary>
-        /// Returns all reviews for a specific location.
-        /// </summary>
-        /// <param name="locationId">The ID of the location</param>
-        /// <returns>
-        /// HEADER: 200 (OK)
-        /// CONTENT: All reviews for the specified location.
-        /// </returns>
-        /// <example>
-        /// GET: api/ReviewData/ListReviewsForLocation/1
-        /// </example>
-        [HttpGet]
-        [Route("api/ReviewData/ListReviewsForLocation/{locationId}")]
-        public IHttpActionResult ListReviewsForLocation(int locationId)
-        {
-            Debug.WriteLine("Loca---" + locationId);
-            List<Review> reviews = db.Reviews.Where(r => r.LocationId == locationId).ToList();
-            List<ReviewDto> reviewDtos = new List<ReviewDto>();
-
-            reviews.ForEach(r => reviewDtos.Add(new ReviewDto()
-            {
-                ReviewId = r.ReviewId,
-                Content = r.Content,
-                Rating = r.Rating,
-                CreatedDate = r.CreatedDate
-            }));
-
-            return Ok(reviewDtos);
-        }
-
-        /// <summary>
         /// Finds a specific review by ID.
         /// </summary>
         /// <param name="id">The ID of the review</param>
@@ -92,7 +62,7 @@ namespace Local_Guide_App.Controllers
         /// BODY: { "ReviewId": 1, "Content": "Great place!", "Rating": 5, "LocationId": 1, "CreatedDate": "2023-06-01T00:00:00" }
         /// </example>
         [HttpPost]
-        [Route("api/ReviewData/UpdateReview/{id}/{review}")]
+        [Route("api/ReviewData/UpdateReview/{id}")]
         [ResponseType(typeof(void))]
         public IHttpActionResult UpdateReview(int id, Review review)
         {
@@ -103,13 +73,31 @@ namespace Local_Guide_App.Controllers
 
             if (id != review.ReviewId)
             {
-                return BadRequest();
+                return BadRequest("Review ID mismatch");
             }
 
-            db.Entry(review).State = System.Data.Entity.EntityState.Modified;
-            db.SaveChanges();
+            Review oldReview = db.Reviews.Find(id);
+            if (oldReview == null)
+            {
+                return NotFound();
+            }
 
-            return StatusCode(System.Net.HttpStatusCode.NoContent);
+            try
+            {
+                oldReview.Content = review.Content;
+                oldReview.Rating = review.Rating;
+                oldReview.LocationId = review.LocationId;
+                oldReview.CreatedDate = review.CreatedDate;
+                oldReview.ReviewId= review.ReviewId;
+
+                db.SaveChanges();
+                return StatusCode(System.Net.HttpStatusCode.OK);
+            }
+            catch (DbUpdateException ex)
+            {
+                Debug.WriteLine("DbUpdateException: " + ex.InnerException?.Message);
+                return InternalServerError(ex);
+            }
         }
 
         /// <summary>
@@ -146,7 +134,7 @@ namespace Local_Guide_App.Controllers
                 return InternalServerError(ex);
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = review.ReviewId }, review);
+            return StatusCode(System.Net.HttpStatusCode.OK);
         }
 
         /// <summary>

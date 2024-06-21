@@ -20,6 +20,17 @@
                 <p><strong>Rating:</strong> @review.Rating</p>
                 <p>@review.Content</p>
                 <p><em>Reviewed on: @review.CreatedDate</em></p>
+                <div class="d-flex justify-content-between">
+                    <form action="@Url.Action("Edit", "Review")" method="get">
+                        <input type="hidden" name="id" value="@review.ReviewId" />
+                        <button type="submit" class="btn btn-warning">Edit</button>
+                    </form>
+                    <form action="@Url.Action("Delete", "Review")" method="post" onsubmit="return confirm('Are you sure you want to delete this review?');">
+                        <input type="hidden" name="id" value="@review.ReviewId" />
+                        <input type="hidden" name="locationId" value="@Model.LocationId" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
             </li>
         }
     </ul>

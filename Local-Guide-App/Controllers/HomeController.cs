@@ -13,7 +13,6 @@ namespace Local_Guide_App.Controllers
 
         public ActionResult Index()
         {
-            // Fetch all locations
             var locations = db.Locations.ToList();
 
             var locationDtos = locations.Select(location => new LocationDto
@@ -23,8 +22,8 @@ namespace Local_Guide_App.Controllers
                 LocationDescription = location.LocationDescription,
                 Category = location.Category,
                 Address = location.Address,
-                CreatedDate = location.CreatedDate ,
-                Ratings = location.Ratings,
+                CreatedDate = location.CreatedDate,
+                AverageRating = location.Reviews.Any() ? Math.Round(location.Reviews.Average(r => r.Rating), 2) : 0
             }).ToList();
 
             return View(locationDtos);

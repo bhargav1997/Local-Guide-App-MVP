@@ -15,11 +15,16 @@
                         <p class="card-text">@location.LocationDescription</p>
                         <p class="card-text">Category: @location.Category</p>
                         <p class="card-text">Address: @location.Address</p>
+                        <p class="card-text">Average Rating: @location.AverageRating</p>
                         <div class="d-flex justify-content-between">
-                            <a href="@Url.RouteUrl("AddReview", new { locationId = location.LocationId })" class="btn btn-primary">Add Review</a>
-                            <a href="@Url.Action("LocationWithReviews", "Location", new { id = location.LocationId })" class="btn btn-secondary">View Reviews</a>
-                            <a href="@Url.Action("Edit", "Location", new { id = location.LocationId })" class="btn btn-warning">Edit</a>
+                            <!--  <a href="@Url.RouteUrl("AddReview", new { locationId = location.LocationId })" class="btn btn-primary">Add Review</a>
+    <a href="@Url.Action("LocationWithReviews", "Location", new { id = location.LocationId })" class="btn btn-secondary">View Reviews</a>-->
+                            <a href="@Url.Action("Edit", "Location", new { id = location.LocationId })" class="btn btn-warning">Edit Location</a>
                             <a href="@Url.Action("Details", "Location", new { id = location.LocationId })" class="btn btn-info">Details</a>
+                            <form action="/Location/Delete" method="post" onsubmit="return confirm('Are you sure you want to delete this location?');">
+                                <input type="hidden" name="id" value="@location.LocationId" />
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
                         </div>
                     </div>
                 </div>

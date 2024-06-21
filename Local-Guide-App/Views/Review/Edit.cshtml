@@ -1,0 +1,25 @@
+﻿@model Local_Guide_App.Models.ReviewDto
+
+@{
+    ViewBag.Title = "Edit Review";
+}
+
+<h2>Edit Review</h2>
+
+<form action="/Review/Update" method="post">
+    <input type="hidden" name="ReviewId" value="@Model.ReviewId" />
+    <input type="hidden" name="LocationId" value="@Model.LocationId" />
+    <input type="hidden" name="CreatedDate" value="@Model.CreatedDate" />
+
+    <div class="form-group">
+        <label for="Rating">Rating</label>
+        <input type="number" class="form-control" id="Rating" name="Rating" value="@Model.Rating" />
+    </div>
+    <div class="form-group">
+        <label for="Content">Content</label>
+        <textarea class="form-control" id="Content" name="Content">@Model.Content</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="@Url.Action("LocationWithReviews", "Location", new { id = Model.LocationId })" class="btn btn-secondary">Cancel</a>
+</form>

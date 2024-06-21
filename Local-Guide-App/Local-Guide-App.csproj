@@ -225,46 +225,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202406062246132_InitialCreate.cs" />
-    <Compile Include="Migrations\202406062246132_InitialCreate.Designer.cs">
-      <DependentUpon>202406062246132_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202406070202357_InitialCreate1.cs" />
-    <Compile Include="Migrations\202406070202357_InitialCreate1.Designer.cs">
-      <DependentUpon>202406070202357_InitialCreate1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202406070207526_TablesAdd.cs" />
-    <Compile Include="Migrations\202406070207526_TablesAdd.Designer.cs">
-      <DependentUpon>202406070207526_TablesAdd.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202406070238404_AddLocation.cs" />
-    <Compile Include="Migrations\202406070238404_AddLocation.Designer.cs">
-      <DependentUpon>202406070238404_AddLocation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202406070342217_UpdateLocation.cs" />
-    <Compile Include="Migrations\202406070342217_UpdateLocation.Designer.cs">
-      <DependentUpon>202406070342217_UpdateLocation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202406070446202_AddReview.cs" />
-    <Compile Include="Migrations\202406070446202_AddReview.Designer.cs">
-      <DependentUpon>202406070446202_AddReview.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202406070509506_AddReview2.cs" />
-    <Compile Include="Migrations\202406070509506_AddReview2.Designer.cs">
-      <DependentUpon>202406070509506_AddReview2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202406070514084_updateloca.cs" />
-    <Compile Include="Migrations\202406070514084_updateloca.Designer.cs">
-      <DependentUpon>202406070514084_updateloca.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202406082121460_UpdateLocationsModel.cs" />
-    <Compile Include="Migrations\202406082121460_UpdateLocationsModel.Designer.cs">
-      <DependentUpon>202406082121460_UpdateLocationsModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202406202217505_LocationWithReview.cs" />
-    <Compile Include="Migrations\202406202217505_LocationWithReview.Designer.cs">
-      <DependentUpon>202406202217505_LocationWithReview.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -353,6 +313,7 @@
     <Content Include="Views\Location\Details.cshtml" />
     <Content Include="Views\Location\LocationWithReviews.cshtml" />
     <Content Include="Views\Location\Edit.cshtml" />
+    <Content Include="Views\Review\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -383,38 +344,6 @@
     <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Scripts\jquery-3.7.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.0.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202406062246132_InitialCreate.resx">
-      <DependentUpon>202406062246132_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202406070202357_InitialCreate1.resx">
-      <DependentUpon>202406070202357_InitialCreate1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202406070207526_TablesAdd.resx">
-      <DependentUpon>202406070207526_TablesAdd.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202406070238404_AddLocation.resx">
-      <DependentUpon>202406070238404_AddLocation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202406070342217_UpdateLocation.resx">
-      <DependentUpon>202406070342217_UpdateLocation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202406070446202_AddReview.resx">
-      <DependentUpon>202406070446202_AddReview.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202406070509506_AddReview2.resx">
-      <DependentUpon>202406070509506_AddReview2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202406070514084_updateloca.resx">
-      <DependentUpon>202406070514084_updateloca.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202406082121460_UpdateLocationsModel.resx">
-      <DependentUpon>202406082121460_UpdateLocationsModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202406202217505_LocationWithReview.resx">
-      <DependentUpon>202406202217505_LocationWithReview.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

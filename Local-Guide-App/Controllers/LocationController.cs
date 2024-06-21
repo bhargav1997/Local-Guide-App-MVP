@@ -8,6 +8,8 @@ using System.Web.Script.Serialization;
 using Microsoft.AspNet.Identity;
 using System.Web;
 using System.Diagnostics;
+using System.Net;
+using System.Net.Http.Headers;
 
 namespace Local_Guide_App.Controllers
 {
@@ -32,26 +34,28 @@ namespace Local_Guide_App.Controllers
         public ActionResult Create(Location location)
         {
             string url = "AddLocation";
-            location.Ratings = 0;
             location.CreatedDate = DateTime.Now;
 
             string jsonpayload = jss.Serialize(location);
-
-            Debug.WriteLine("==>"+jsonpayload);
-
             HttpContent content = new StringContent(jsonpayload);
             content.Headers.ContentType.MediaType = "application/json";
 
             HttpResponseMessage response = client.PostAsync(url, content).Result;
 
-            //Debug.WriteLine(response?.IsSuccessStatusCode);
+            Debug.WriteLine("==>>>"+response.IsSuccessStatusCode);
 
             if (response.IsSuccessStatusCode)
             {
                 return RedirectToAction("List");
             }
-           else
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
             {
+                // Handle specific bad request (e.g., ModelState errors) if needed
+                return View("Add", location); // Return to the add view with model errors
+            }
+            else
+            {
+                // Handle other status codes (e.g., 500 Internal Server Error)
                 return RedirectToAction("Error");
             }
         }
@@ -113,6 +117,29 @@ namespace Local_Guide_App.Controllers
             if (response.IsSuccessStatusCode)
             {
                 return RedirectToAction("Details", new { id = location.LocationId });
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
+        }
+
+        // POST: Location/Delete/5
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            string url = $"DeleteLocation/{id}";
+
+            // Assuming you have configured HttpClient properly
+            var response = client.PostAsync(url, null).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("List");
+            }
+            else if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return HttpNotFound();
             }
             else
             {

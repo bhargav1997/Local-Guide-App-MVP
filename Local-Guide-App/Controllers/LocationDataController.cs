@@ -160,7 +160,8 @@ namespace Local_Guide_App.Controllers
                 LocationDescription = location.LocationDescription,
                 Category = location.Category,
                 Address = location.Address,
-                CreatedDate = location.CreatedDate
+                CreatedDate = location.CreatedDate,
+                AverageRating = location.Reviews.Any() ? Math.Round(location.Reviews.Average(r => r.Rating), 2) : 0
             };
 
             return Ok(locationDto);
@@ -169,67 +170,51 @@ namespace Local_Guide_App.Controllers
         /// <summary>
         /// Updates a specific location.
         /// </summary>
-        /// <param name="id">The ID of the location to update</param>
-        /// <param name="location">The updated location data</param>
+        /// <param name="id">The ID of the location to update.</param>
+        /// <param name="locationDto">The data transfer object containing updated location information.</param>
         /// <returns>
-        /// HEADER: 204 (No Content)
-        /// HEADER: 400 (Bad Request)
+        /// (No Content) if the location is successfully updated.
+        /// (Bad Request) if the ModelState is invalid or if the ID in the URL does not match the ID in the locationDto.
+        /// (Not Found) if the location with the specified ID is not found in the database.
         /// </returns>
         /// <example>
-        /// POST: api/LocationData/UpdateLocation/1
-        /// BODY: { "LocationId": 1, "LocationName": "Park", "LocationDescription": "A nice park", "Category": "Recreation", "Address": "123 Park Lane", "CreatedDate": "2023-06-01T00:00:00" }
+        /// POST: api/LocationData/UpdateLocation/5
+        /// BODY: {
+        ///   "LocationId": 5,
+        ///   "LocationName": "Updated Location Name",
+        ///   "LocationDescription": "Updated Description",
+        ///   "Category": "Updated Category",
+        ///   "Address": "Updated Address"
+        /// }
         /// </example>
-        [System.Web.Http.HttpPost]
-        [System.Web.Http.Route("api/LocationData/UpdateLocation/{id}/{location}")]
-        [ResponseType(typeof(void))]
-        public IHttpActionResult UpdateLocation(int id, Location location)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != location.LocationId)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(location).State = System.Data.Entity.EntityState.Modified;
-            db.SaveChanges();
-
-            return StatusCode(System.Net.HttpStatusCode.NoContent);
-        }
-
         [System.Web.Http.HttpPost]
         [System.Web.Http.Route("api/LocationData/UpdateLocation/{id}")]
         [ResponseType(typeof(void))]
-        public IHttpActionResult UpdateLocation(int id, LocationDto location)
+        public IHttpActionResult UpdateLocation(int id, LocationDto locationDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != location.LocationId)
+            if (id != locationDto.LocationId)
             {
                 return BadRequest();
             }
 
-            Location dbLocation = db.Locations.Find(id);
-            if (dbLocation == null)
+            Location location = db.Locations.Find(id);
+            if (location == null)
             {
                 return NotFound();
             }
 
-            dbLocation.LocationName = location.LocationName;
-            dbLocation.LocationDescription = location.LocationDescription;
-            dbLocation.Category = location.Category;
-            dbLocation.Address = location.Address;
-            dbLocation.Ratings = location.Ratings;
-            dbLocation.CreatedDate = location.CreatedDate; // Or handle the created date as per your requirement
+            // Update location properties
+            location.LocationName = locationDto.LocationName;
+            location.LocationDescription = locationDto.LocationDescription;
+            location.Category = locationDto.Category;
+            location.Address = locationDto.Address;
 
-            db.Entry(dbLocation).State = EntityState.Modified;
-
+            // Save changes
             try
             {
                 db.SaveChanges();
@@ -249,11 +234,15 @@ namespace Local_Guide_App.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+        /// <summary>
+        /// Checks if a location exists in the database.
+        /// </summary>
+        /// <param name="id">The ID of the location to check.</param>
+        /// <returns>True if the location exists; otherwise, false.</returns>
         private bool LocationExists(int id)
         {
-            return db.Locations.Count(e => e.LocationId == id) > 0;
+            return db.Locations.Any(e => e.LocationId == id);
         }
-
 
         /// <summary>
         /// Adds a new location to the system.
@@ -278,10 +267,18 @@ namespace Local_Guide_App.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.Locations.Add(location);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = location.LocationId }, location);
+            try
+            {
+                db.Locations.Add(location);
+                db.SaveChanges();
+                return StatusCode(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it appropriately
+                Debug.WriteLine($"Error adding location: {ex.Message}");
+                return InternalServerError(); // Return 500 Internal Server Error on failure
+            }
         }
 
         /// <summary>
@@ -298,7 +295,7 @@ namespace Local_Guide_App.Controllers
         /// </example>
         [System.Web.Http.HttpPost]
         [System.Web.Http.Route("api/LocationData/DeleteLocation/{id}")]
-        [ResponseType(typeof(LocationDto))]
+        [ResponseType(typeof(void))]
         public IHttpActionResult DeleteLocation(int id)
         {
             Location location = db.Locations.Find(id);
@@ -310,7 +307,8 @@ namespace Local_Guide_App.Controllers
             db.Locations.Remove(location);
             db.SaveChanges();
 
-            return Ok(location);
+            return StatusCode(HttpStatusCode.OK);
         }
+
     }
 }
