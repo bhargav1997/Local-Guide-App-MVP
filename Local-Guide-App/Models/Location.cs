@@ -23,8 +23,13 @@
             public DateTime CreatedDate { get; set; }
 
             // Navigation property to reviews
-            public virtual ICollection<Review> Reviews { get; set; } 
-        }
+            public virtual ICollection<Review> Reviews { get; set; }
+
+            // Data needed for keeping track of Location images uploaded
+            // Images deposited into /Content/Images/Locations/{id}.{extension}
+            public bool LocationHasPic { get; set; }
+            public string PicExtension { get; set; }
+    }
 
         public class LocationDto
         {
@@ -35,9 +40,14 @@
             public string Address { get; set; }
             public double AverageRating { get; set; } // New property for average rating
             public DateTime CreatedDate { get; set; }
-        }
 
-        public class LocationWithReviewsDto
+            //data needed for keeping track of Location images uploaded
+            //images deposited into /Content/Images/Locations/{id}.{extension}
+            public bool LocationHasPic { get; set; }
+            public string PicExtension { get; set; }
+    }
+
+    public class LocationWithReviewsDto
         {
             public int LocationId { get; set; }
             public string LocationName { get; set; }
@@ -46,5 +56,7 @@
             public string Address { get; set; }
             public DateTime CreatedDate { get; set; }
             public List<ReviewDto> Reviews { get; set; }
-        }
+            public bool LocationHasPic { get; set; }
+            public string PicExtension { get; set; }
+    }
 }

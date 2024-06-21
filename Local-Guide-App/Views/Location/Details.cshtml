@@ -13,6 +13,17 @@
             <p class="card-text">Address: @Model.Address</p>
             <p class="card-text">Ratings: @Model.AverageRating</p>
             <p class="card-text">Created Date: @Model.CreatedDate.ToString("yyyy-MM-dd")</p>
+            @{
+                string imageurl = "/Content/Images/Locations/default.jpg";
+                if (Model.LocationHasPic)
+                {
+                    imageurl = "/Content/Images/Locations/" + Model.LocationId + "." + Model.PicExtension;
+                }
+            }
+            <div class="mb-3">
+                <img class="rounded card-img-top img-fluid" alt="@Model.LocationName" src="@imageurl" />
+            </div>
+
             <div>
                 <a href="@Url.Action("Edit", "Location", new { id = Model.LocationId })" class="btn btn-warning">Edit</a>
                 <a href="@Url.RouteUrl("AddReview", new { locationId = Model.LocationId })" class="btn btn-primary">Add Review</a>

@@ -26,6 +26,7 @@ namespace Local_Guide_App.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult Add(int locationId)
         {
             Debug.WriteLine("Location:"+ locationId);
@@ -34,6 +35,7 @@ namespace Local_Guide_App.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult Create(Review review)
         {
             try
@@ -89,6 +91,7 @@ namespace Local_Guide_App.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult Edit(int id)
         {
             string url = $"FindReview/{id}";
@@ -106,6 +109,7 @@ namespace Local_Guide_App.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult Update(ReviewDto review)
         {
             string url = $"UpdateReview/{review.ReviewId}";
@@ -126,6 +130,7 @@ namespace Local_Guide_App.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult Delete(int id, int locationId)
         {
             string url = $"DeleteReview/{id}";

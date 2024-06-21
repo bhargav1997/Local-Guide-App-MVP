@@ -23,7 +23,9 @@ namespace Local_Guide_App.Controllers
                 Category = location.Category,
                 Address = location.Address,
                 CreatedDate = location.CreatedDate,
-                AverageRating = location.Reviews.Any() ? Math.Round(location.Reviews.Average(r => r.Rating), 2) : 0
+                AverageRating = location.Reviews.Any() ? Math.Round(location.Reviews.Average(r => r.Rating), 2) : 0,
+                LocationHasPic = location.LocationHasPic,
+                PicExtension = location.PicExtension,
             }).ToList();
 
             return View(locationDtos);

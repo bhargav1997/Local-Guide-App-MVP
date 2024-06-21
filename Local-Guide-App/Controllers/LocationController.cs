@@ -31,6 +31,7 @@ namespace Local_Guide_App.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult Create(Location location)
         {
             string url = "AddLocation";
@@ -85,6 +86,7 @@ namespace Local_Guide_App.Controllers
             }
         }
 
+        [Authorize]
         public ActionResult Edit(int id)
         {
             string url = $"FindLocation/{id}";
@@ -102,7 +104,8 @@ namespace Local_Guide_App.Controllers
         }
 
         [HttpPost]
-        public ActionResult Update(LocationDto location)
+        [Authorize]
+        public ActionResult Update(LocationDto location, HttpPostedFileBase LocationPic)
         {
             string url = $"UpdateLocation/{location.LocationId}";
             location.CreatedDate = DateTime.Now; // Assuming you want to update the CreatedDate as well
@@ -116,6 +119,20 @@ namespace Local_Guide_App.Controllers
 
             if (response.IsSuccessStatusCode)
             {
+                if (LocationPic != null && LocationPic.ContentLength > 0)
+                {
+                    url = $"UploadLocationPic/{location.LocationId}";
+                    MultipartFormDataContent multipartContent = new MultipartFormDataContent();
+                    multipartContent.Add(new StreamContent(LocationPic.InputStream), "LocationPic", LocationPic.FileName);
+
+                    response = client.PostAsync(url, multipartContent).Result;
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Error");
+                    }
+                }
+
                 return RedirectToAction("Details", new { id = location.LocationId });
             }
             else
@@ -126,6 +143,7 @@ namespace Local_Guide_App.Controllers
 
         // POST: Location/Delete/5
         [HttpPost]
+        [Authorize]
         public ActionResult Delete(int id)
         {
             string url = $"DeleteLocation/{id}";

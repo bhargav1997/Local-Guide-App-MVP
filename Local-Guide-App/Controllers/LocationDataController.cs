@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Http;
 using System.Data.Entity;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
 using System.Data.Entity.Infrastructure;
 using System.Web.Http.Description;
 using Microsoft.AspNet.Identity;
 using System.Diagnostics;
-using System.Net.Http;
-using System.Net;
+using System.IO;
 
 namespace Local_Guide_App.Controllers
 {
@@ -44,7 +45,9 @@ namespace Local_Guide_App.Controllers
                 LocationDescription = l.LocationDescription,
                 Category = l.Category,
                 Address = l.Address,
-                CreatedDate = l.CreatedDate
+                CreatedDate = l.CreatedDate,
+                LocationHasPic = l.LocationHasPic,
+                PicExtension = l.PicExtension,
             }));
 
             return locationDtos;
@@ -75,7 +78,9 @@ namespace Local_Guide_App.Controllers
                 LocationDescription = l.LocationDescription,
                 Category = l.Category,
                 Address = l.Address,
-                CreatedDate = l.CreatedDate
+                CreatedDate = l.CreatedDate,
+                LocationHasPic = l.LocationHasPic,
+                PicExtension = l.PicExtension,
             }));
 
             return Ok(locationDtos);
@@ -113,7 +118,7 @@ namespace Local_Guide_App.Controllers
                 Content = r.Content,
                 Rating = r.Rating,
                 LocationId = r.LocationId,
-                CreatedDate = r.CreatedDate
+                CreatedDate = r.CreatedDate,
             }));
 
             LocationWithReviewsDto locationWithReviewsDto = new LocationWithReviewsDto()
@@ -124,7 +129,9 @@ namespace Local_Guide_App.Controllers
                 Category = location.Category,
                 Address = location.Address,
                 CreatedDate = location.CreatedDate,
-                Reviews = reviewDtos
+                Reviews = reviewDtos,
+                LocationHasPic = location.LocationHasPic,
+                PicExtension = location.PicExtension,
             };
 
             return Ok(locationWithReviewsDto);
@@ -161,7 +168,9 @@ namespace Local_Guide_App.Controllers
                 Category = location.Category,
                 Address = location.Address,
                 CreatedDate = location.CreatedDate,
-                AverageRating = location.Reviews.Any() ? Math.Round(location.Reviews.Average(r => r.Rating), 2) : 0
+                AverageRating = location.Reviews.Any() ? Math.Round(location.Reviews.Average(r => r.Rating), 2) : 0,
+                LocationHasPic = location.LocationHasPic, 
+                PicExtension = location.PicExtension
             };
 
             return Ok(locationDto);
@@ -213,6 +222,7 @@ namespace Local_Guide_App.Controllers
             location.LocationDescription = locationDto.LocationDescription;
             location.Category = locationDto.Category;
             location.Address = locationDto.Address;
+            location.CreatedDate = locationDto.CreatedDate;
 
             // Save changes
             try
@@ -310,5 +320,78 @@ namespace Local_Guide_App.Controllers
             return StatusCode(HttpStatusCode.OK);
         }
 
+        /// <summary>
+        /// Uploads a picture for a specific location.
+        /// </summary>
+        /// <param name="id">The ID of the location.</param>
+        /// <returns>HTTP status code 200 (OK) if the upload is successful.</returns>
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/LocationData/UploadLocationPic/{id}")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult UploadLocationPic(int id)
+        {
+            bool hasPic = false;
+            string picExtension;
+
+            if (Request.Content.IsMimeMultipartContent())
+            {
+                int numFiles = HttpContext.Current.Request.Files.Count;
+
+                if (numFiles == 1 && HttpContext.Current.Request.Files[0] != null)
+                {
+                    var locationPic = HttpContext.Current.Request.Files[0];
+
+                    Debug.WriteLine("locationPic.FileName" + locationPic.FileName);
+                    if (locationPic.ContentLength > 0)
+                    {
+                        var validTypes = new[] { "jpeg", "jpg", "png", "gif" };
+                        var extension = Path.GetExtension(locationPic.FileName).Substring(1);
+
+                        Debug.WriteLine("extension" + extension);
+
+                        if (validTypes.Contains(extension))
+                        {
+                            try
+                            {
+                                string fn = id + "." + extension;
+                                string directoryPath = HttpContext.Current.Server.MapPath("~/Content/Images/Locations/");
+                                string path = Path.Combine(directoryPath, fn);
+
+                                Debug.WriteLine($"{path}");
+                                // Ensure the directory exists
+                                if (!Directory.Exists(directoryPath))
+                                {
+                                    Directory.CreateDirectory(directoryPath);
+                                }
+
+                                locationPic.SaveAs(path);
+
+                                hasPic = true;
+                                picExtension = extension;
+
+                                Location selectedLocation = db.Locations.Find(id);
+                                selectedLocation.LocationHasPic = hasPic;
+                                selectedLocation.PicExtension = extension;
+                                db.Entry(selectedLocation).State = System.Data.Entity.EntityState.Modified;
+
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine("Location image was not saved successfully.");
+                                Debug.WriteLine("Exception:" + ex);
+                                return BadRequest();
+                            }
+                        }
+                    }
+                }
+
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Not multipart content");
+            }
+        }
     }
 }

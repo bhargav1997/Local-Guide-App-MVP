@@ -1,31 +1,43 @@
-﻿@model IEnumerable<Local_Guide_App.Models.ReviewDto>
+﻿@model IEnumerable<Local_Guide_App.Models.LocationDto>
 
 @{
-    ViewBag.Title = "Reviews";
+    ViewBag.Title = "Locations List";
 }
 
-<div class="container mt-5">
-    <h2>Reviews</h2>
+<main class="container mt-5">
+    <div class="row">
+        @foreach (var location in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    @{
+                        string imageurl = "/Content/Images/Locations/default.jpg";
+                        if (location.LocationHasPic)
+                        {
+                            imageurl = "/Content/Images/Locations/" + location.LocationId + "." + location.PicExtension;
+                        }
+                    }
 
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Content</th>
-                    <th>Rating</th>
-                    <th>Created At</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.Content</td>
-                        <td>@item.Rating</td>
-                        <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                    <div class="mb-3">
+                        <img class="card-img-top img-fluid" alt="@location.LocationName" src="@imageurl" />
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title">@location.LocationName</h5>
+                        <p class="card-text">@location.LocationDescription</p>
+                        <p class="card-text">Category: @location.Category</p>
+                        <p class="card-text">Address: @location.Address</p>
+                        <p class="card-text">Average Rating: @location.AverageRating.ToString("0.0")</p>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="@Url.RouteUrl("AddReview", new { locationId = location.LocationId })" class="btn btn-primary">Add Review</a>
+                            <a href="@Url.Action("LocationWithReviews", "Location", new { id = location.LocationId })" class="btn btn-secondary">View Reviews</a>
+                            <a href="@Url.Action("Edit", "Location", new { id = location.LocationId })" class="btn btn-warning">Edit</a>
+                            <a href="@Url.Action("Details", "Location", new { id = location.LocationId })" class="btn btn-info">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-</div>
+</main>

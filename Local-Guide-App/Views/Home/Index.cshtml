@@ -10,12 +10,24 @@
         {
             <div class="col-md-6 mb-4">
                 <div class="card">
+                    @{
+                        string imageurl = "/Content/Images/Locations/default.jpg";
+                        if (location.LocationHasPic)
+                        {
+                            imageurl = "/Content/Images/Locations/" + location.LocationId + "." + location.PicExtension;
+                        }
+                    }
+                    <div class="mb-3">
+                        <img class="card-img-top img-fluid" alt="@location.LocationName" src="@imageurl" />
+                    </div>
+
                     <div class="card-body">
                         <h5 class="card-title">@location.LocationName</h5>
                         <p class="card-text">@location.LocationDescription</p>
                         <p class="card-text">Category: @location.Category</p>
                         <p class="card-text">Address: @location.Address</p>
                         <p class="card-text">Average Rating: @location.AverageRating</p>
+
                         <div class="d-flex justify-content-between">
                             <a href="@Url.Action("Edit", "Location", new { id = location.LocationId })" class="btn btn-warning">Edit Location</a>
                             <a href="@Url.Action("Details", "Location", new { id = location.LocationId })" class="btn btn-info">Details</a>
