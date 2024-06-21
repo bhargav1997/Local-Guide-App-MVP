@@ -78,5 +78,3 @@ Inspired by my passion for being a Google Local Guide and sharing reviews and ph
   ![Location with Reviews](demo/LocationWithReviews.png)
 
 ---
-
-Feel free to adjust the text or image paths according to your actual file structure. This README.md provides a clear visual guide to the Local Guide App's features and functionalities, making it easier for users and stakeholders to understand and navigate the application.
