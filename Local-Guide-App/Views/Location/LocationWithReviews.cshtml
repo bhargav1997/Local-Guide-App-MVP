@@ -1,0 +1,30 @@
+﻿@model Local_Guide_App.Models.LocationWithReviewsDto
+
+@{
+    ViewBag.Title = "Location Details with Reviews";
+}
+
+<h2>@Model.LocationName</h2>
+<p>@Model.LocationDescription</p>
+<p>Category: @Model.Category</p>
+<p>Address: @Model.Address</p>
+<p>Created Date: @Model.CreatedDate</p>
+
+<h3>Reviews</h3>
+@if (Model.Reviews != null && Model.Reviews.Count > 0)
+{
+    <ul>
+        @foreach (var review in Model.Reviews)
+        {
+            <li>
+                <p><strong>Rating:</strong> @review.Rating</p>
+                <p>@review.Content</p>
+                <p><em>Reviewed on: @review.CreatedDate</em></p>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No reviews yet.</p>
+}

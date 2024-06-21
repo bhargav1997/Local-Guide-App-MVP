@@ -18,10 +18,11 @@ namespace Local_Guide_App
                 defaults: new { controller = "Review", action = "Add" }
             );
 
+           
             routes.MapRoute(
-                name: "ViewReviews",
-                url: "Review/List/{locationId}",
-                defaults: new { controller = "Review", action = "List" }
+            name: "ViewReviews",
+            url: "{controller}/{action}/{id}",
+            defaults: new { controller = "Location", action = "LocationWithReviews" }
             );
 
             routes.MapRoute(

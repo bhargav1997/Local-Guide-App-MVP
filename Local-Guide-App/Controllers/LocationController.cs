@@ -65,6 +65,77 @@ namespace Local_Guide_App.Controllers
             return View(locations);
         }
 
+        public ActionResult LocationWithReviews(int id)
+        {
+            string url = $"ListReviewsForLocation/{id}";
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                LocationWithReviewsDto locationWithReviews = response.Content.ReadAsAsync<LocationWithReviewsDto>().Result;
+                return View(locationWithReviews);
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
+        }
+
+        public ActionResult Edit(int id)
+        {
+            string url = $"FindLocation/{id}";
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                LocationDto selectedLocation = response.Content.ReadAsAsync<LocationDto>().Result;
+                return View(selectedLocation);
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Update(LocationDto location)
+        {
+            string url = $"UpdateLocation/{location.LocationId}";
+            location.CreatedDate = DateTime.Now; // Assuming you want to update the CreatedDate as well
+
+            string jsonpayload = jss.Serialize(location);
+
+            HttpContent content = new StringContent(jsonpayload);
+            content.Headers.ContentType.MediaType = "application/json";
+
+            HttpResponseMessage response = client.PostAsync(url, content).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Details", new { id = location.LocationId });
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
+        }
+
+        public ActionResult Details(int id)
+        {
+            string url = $"FindLocation/{id}";
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                LocationDto location = response.Content.ReadAsAsync<LocationDto>().Result;
+                return View(location);
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
+        }
+
         public ActionResult Error()
         {
             return View();

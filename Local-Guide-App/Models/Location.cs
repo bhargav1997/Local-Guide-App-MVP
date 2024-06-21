@@ -35,4 +35,15 @@
             public int Ratings { get; set; }
             public DateTime CreatedDate { get; set; }
         }
-    }
+
+        public class LocationWithReviewsDto
+        {
+            public int LocationId { get; set; }
+            public string LocationName { get; set; }
+            public string LocationDescription { get; set; }
+            public string Category { get; set; }
+            public string Address { get; set; }
+            public DateTime CreatedDate { get; set; }
+            public List<ReviewDto> Reviews { get; set; }
+        }
+}

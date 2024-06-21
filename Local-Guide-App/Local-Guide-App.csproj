@@ -261,6 +261,10 @@
     <Compile Include="Migrations\202406082121460_UpdateLocationsModel.Designer.cs">
       <DependentUpon>202406082121460_UpdateLocationsModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202406202217505_LocationWithReview.cs" />
+    <Compile Include="Migrations\202406202217505_LocationWithReview.Designer.cs">
+      <DependentUpon>202406202217505_LocationWithReview.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -347,6 +351,8 @@
     <Content Include="Views\Review\Add.cshtml" />
     <Content Include="Views\Review\List.cshtml" />
     <Content Include="Views\Location\Details.cshtml" />
+    <Content Include="Views\Location\LocationWithReviews.cshtml" />
+    <Content Include="Views\Location\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -405,6 +411,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202406082121460_UpdateLocationsModel.resx">
       <DependentUpon>202406082121460_UpdateLocationsModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202406202217505_LocationWithReview.resx">
+      <DependentUpon>202406202217505_LocationWithReview.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -4,36 +4,21 @@
     ViewBag.Title = "Location Details";
 }
 
-<div class="container mt-5">
-    <h2>@Model.LocationName</h2>
-    <p>@Model.LocationDescription</p>
-    <p>Category: @Model.Category</p>
-    <p>Address: @Model.Address</p>
-
-    <h3>Reviews</h3>
-    <div id="reviews-section">
-    </div>
-
-    <div id="add-review-section" style="display: none;">
-        <h3>Add Review</h3>
-        <form id="add-review-form">
-            <div class="form-group">
-                <label for="review-content">Review:</label>
-                <textarea class="form-control" id="review-content" rows="3" required></textarea>
+<main class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@Model.LocationName</h5>
+            <p class="card-text">@Model.LocationDescription</p>
+            <p class="card-text">Category: @Model.Category</p>
+            <p class="card-text">Address: @Model.Address</p>
+            <p class="card-text">Ratings: @Model.Ratings</p>
+            <p class="card-text">Created Date: @Model.CreatedDate.ToString("yyyy-MM-dd")</p>
+            <div>
+                <a href="@Url.Action("Edit", "Location", new { id = Model.LocationId })" class="btn btn-warning">Edit</a>
+                <a href="@Url.Action("AddReview", "Location", new { locationId = Model.LocationId })" class="btn btn-primary">Add Review</a>
+                <a href="@Url.Action("LocationWithReviews", "Location", new { id = Model.LocationId })" class="btn btn-secondary">View Reviews</a>
+                <a href="@Url.Action("List", "Location")" class="btn btn-secondary">Back to List</a>
             </div>
-            <div class="form-group">
-                <label for="rating">Rating:</label>
-                <input type="number" class="form-control" id="rating" min="1" max="5" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit Review</button>
-        </form>
+        </div>
     </div>
-
-    <button id="add-review-button" class="btn btn-secondary mt-3" onclick="toggleAddReviewSection()">Add Review</button>
-</div>
-
-<script>
-    function toggleAddReviewSection() {
-        $('#add-review-section').toggle();
-    }
-</script>
+</main>

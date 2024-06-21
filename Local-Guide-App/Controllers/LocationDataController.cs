@@ -10,6 +10,8 @@ using System.Data.Entity.Infrastructure;
 using System.Web.Http.Description;
 using Microsoft.AspNet.Identity;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Net;
 
 namespace Local_Guide_App.Controllers
 {
@@ -77,6 +79,55 @@ namespace Local_Guide_App.Controllers
             }));
 
             return Ok(locationDtos);
+        }
+
+        /// <summary>
+        /// Returns details of a specific location along with all its reviews.
+        /// </summary>
+        /// <param name="id">The ID of the location</param>
+        /// <returns>
+        /// HEADER: 200 (OK)
+        /// CONTENT: The location details and its reviews.
+        /// HEADER: 404 (Not Found)
+        /// </returns>
+        /// <example>
+        /// GET: api/LocationData/ListReviewsForLocation/1
+        /// </example>
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Route("api/LocationData/ListReviewsForLocation/{id}")]
+        [ResponseType(typeof(LocationWithReviewsDto))]
+        public IHttpActionResult ListReviewsForLocation(int id)
+        {
+            Location location = db.Locations.Find(id);
+            if (location == null)
+            {
+                return NotFound();
+            }
+
+            List<Review> reviews = db.Reviews.Where(r => r.LocationId == id).ToList();
+            List<ReviewDto> reviewDtos = new List<ReviewDto>();
+
+            reviews.ForEach(r => reviewDtos.Add(new ReviewDto()
+            {
+                ReviewId = r.ReviewId,
+                Content = r.Content,
+                Rating = r.Rating,
+                LocationId = r.LocationId,
+                CreatedDate = r.CreatedDate
+            }));
+
+            LocationWithReviewsDto locationWithReviewsDto = new LocationWithReviewsDto()
+            {
+                LocationId = location.LocationId,
+                LocationName = location.LocationName,
+                LocationDescription = location.LocationDescription,
+                Category = location.Category,
+                Address = location.Address,
+                CreatedDate = location.CreatedDate,
+                Reviews = reviewDtos
+            };
+
+            return Ok(locationWithReviewsDto);
         }
 
         /// <summary>
@@ -148,6 +199,61 @@ namespace Local_Guide_App.Controllers
 
             return StatusCode(System.Net.HttpStatusCode.NoContent);
         }
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/LocationData/UpdateLocation/{id}")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult UpdateLocation(int id, LocationDto location)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != location.LocationId)
+            {
+                return BadRequest();
+            }
+
+            Location dbLocation = db.Locations.Find(id);
+            if (dbLocation == null)
+            {
+                return NotFound();
+            }
+
+            dbLocation.LocationName = location.LocationName;
+            dbLocation.LocationDescription = location.LocationDescription;
+            dbLocation.Category = location.Category;
+            dbLocation.Address = location.Address;
+            dbLocation.Ratings = location.Ratings;
+            dbLocation.CreatedDate = location.CreatedDate; // Or handle the created date as per your requirement
+
+            db.Entry(dbLocation).State = EntityState.Modified;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!LocationExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        private bool LocationExists(int id)
+        {
+            return db.Locations.Count(e => e.LocationId == id) > 0;
+        }
+
 
         /// <summary>
         /// Adds a new location to the system.

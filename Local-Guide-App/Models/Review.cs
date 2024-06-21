@@ -5,7 +5,6 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
 namespace Local_Guide_App.Models
 {
     public class Review
