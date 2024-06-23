@@ -1,20 +1,52 @@
-﻿    @{
+﻿@{
     ViewBag.Title = "Add Review";
 }
 
 <div class="container mt-5">
     <h2 class="mb-4">Add Review</h2>
 
-    <form action="/Review/Create" method="post">
+    <form action="/Review/Create" method="post" class="needs-validation" novalidate>
         <input type="hidden" name="LocationId" value="@ViewData["LocationId"]" />
+
         <div class="form-group">
             <label for="ReviewContent">Content:</label>
-            <textarea class="form-control" id="ReviewContent" name="Content" required></textarea>
+            <textarea class="form-control" id="ReviewContent" name="Content" placeholder="Enter your review content" required></textarea>
+            <div class="invalid-feedback">
+                Please enter your review content.
+            </div>
         </div>
+
         <div class="form-group">
             <label for="Rating">Rating:</label>
-            <input type="number" class="form-control" id="Rating" name="Rating" min="1" max="5" required />
+            <input type="number" class="form-control" id="Rating" name="Rating" min="1" max="5" placeholder="Enter rating (1-5)" required />
+            <div class="invalid-feedback">
+                Please enter a valid rating (1-5).
+            </div>
         </div>
+
         <button type="submit" class="btn btn-primary mt-2">Add Review</button>
     </form>
 </div>
+
+@section Scripts {
+    <script>
+        (function () {
+            'use strict';
+
+            var forms = document.querySelectorAll('.needs-validation');
+
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+        })();
+    </script>
+}

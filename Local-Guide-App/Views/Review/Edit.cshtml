@@ -4,22 +4,56 @@
     ViewBag.Title = "Edit Review";
 }
 
-<h2>Edit Review</h2>
+<div class="container mt-5">
+    <h2>Edit Review</h2>
 
-<form action="/Review/Update" method="post">
-    <input type="hidden" name="ReviewId" value="@Model.ReviewId" />
-    <input type="hidden" name="LocationId" value="@Model.LocationId" />
-    <input type="hidden" name="CreatedDate" value="@Model.CreatedDate" />
+    <form action="@Url.Action("Update", "Review")" method="post">
+        <input type="hidden" name="ReviewId" value="@Model.ReviewId" />
+        <input type="hidden" name="LocationId" value="@Model.LocationId" />
+        <input type="hidden" name="CreatedDate" value="@Model.CreatedDate" />
 
-    <div class="form-group">
-        <label for="Rating">Rating</label>
-        <input type="number" class="form-control" id="Rating" name="Rating" value="@Model.Rating" />
-    </div>
-    <div class="form-group">
-        <label for="Content">Content</label>
-        <textarea class="form-control" id="Content" name="Content">@Model.Content</textarea>
-    </div>
+        <div class="form-group">
+            <label for="Rating">Rating:</label>
+            <input type="number" class="form-control" id="Rating" name="Rating" value="@Model.Rating" min="1" max="5" required />
+            <div class="invalid-feedback">
+                Please enter a valid rating (1-5).
+            </div>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a href="@Url.Action("LocationWithReviews", "Location", new { id = Model.LocationId })" class="btn btn-secondary">Cancel</a>
-</form>
+        <div class="form-group">
+            <label for="Content">Content:</label>
+            <textarea class="form-control" id="Content" name="Content" rows="5" required>@Model.Content</textarea>
+            <div class="invalid-feedback">
+                Please enter the review content.
+            </div>
+        </div>
+
+        <div class="mt-2">
+             <button type="submit" class="btn btn-primary btn-block">Save</button>
+             <a href="@Url.Action("LocationWithReviews", "Location", new { id = Model.LocationId })" class="btn btn-secondary btn-block">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            'use strict';
+
+            var forms = document.querySelectorAll('.needs-validation');
+
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+        })();
+    </script>
+}
